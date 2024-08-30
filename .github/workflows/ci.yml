@@ -18,51 +18,44 @@ jobs:
       - uses: ./.github/actions/setup
       - run: bun run lint
 
-  delete-cache:
+  run-action:
     needs:
       - test
       - lint
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - key: CACHE_KEY
+            fail-on-not-found: false
+            create-cache: true
+
+          - key: CACHE_NOT_FOUND
+            fail-on-not-found: false
+            create-cache: false
+
+          - key: CACHE_NOT_FOUND
+            fail-on-not-found: true
+            create-cache: false
     steps:
       - uses: actions/checkout@v4
 
-      - run: touch cache.txt
+      - name: Setup cache
+        if: ${{ matrix.create-cache }}
+        run: touch cache.txt
       - uses: actions/cache@v4
+        if: ${{ matrix.create-cache }}
         with:
-          key: CACHE_KEY
+          key: ${{ matrix.key }}
           path: cache.txt
 
       - uses: ./
-        with:
-          key: CACHE_KEY
-
-  delete-cache-not-found-no-error:
-    needs:
-      - test
-      - lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: ./
         id: cache-delete
+        continue-on-error: ${{ matrix.fail-on-not-found }}
         with:
-          key: CACHE_NOT_FOUND
-          fail-on-not-found: false
+          key: ${{ matrix.key }}
+          fail-on-not-found: ${{ matrix.fail-on-not-found }}
 
-  delete-cache-not-found-error:
-    needs:
-      - test
-      - lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: ./
-        id: cache-delete
-        continue-on-error: true
-        with:
-          key: CACHE_NOT_FOUND
-          fail-on-not-found: true
-      - run: exit 1
-        if: steps.cache-delete.outcome != 'failure'
+      - name: Check failure for not-found-error scenario
+        if: ${{ matrix.fail-on-not-found && !matrix.create-cache && steps.cache-delete.outcome != 'failure' }}
+        run: exit 1
