@@ -1,61 +1,27 @@
-# ts-action-template
+# Cache Delete Action
 
-[![GitHub Release](https://img.shields.io/github/v/release/koki-develop/ts-action-template)](https://github.com/koki-develop/ts-action-template/releases/latest)
-[![CI](https://img.shields.io/github/actions/workflow/status/koki-develop/ts-action-template/ci.yml?branch=main&logo=github&style=flat&label=ci)](https://github.com/koki-develop/ts-action-template/actions/workflows/ci.yml)
-[![Build](https://img.shields.io/github/actions/workflow/status/koki-develop/ts-action-template/build.yml?branch=main&logo=github&style=flat&label=build)](https://github.com/koki-develop/ts-action-template/actions/workflows/build.yml)
+[![GitHub Release](https://img.shields.io/github/v/release/koki-develop/cache-delete-action)](https://github.com/koki-develop/cache-delete-action/releases/latest)
+[![CI](https://img.shields.io/github/actions/workflow/status/koki-develop/cache-delete-action/ci.yml?branch=main&logo=github&style=flat&label=ci)](https://github.com/koki-develop/cache-delete-action/actions/workflows/ci.yml)
+[![Build](https://img.shields.io/github/actions/workflow/status/koki-develop/cache-delete-action/build.yml?branch=main&logo=github&style=flat&label=build)](https://github.com/koki-develop/cache-delete-action/actions/workflows/build.yml)
 
-This is a template for creating GitHub Actions in TypeScript.
+Delete a cache for a given key.
 
-## Requirements
+## Usage
 
-[Bun](https://bun.sh/) is required.
-
-## Getting Started
-
-1. Click the `Use this template` button to create a new repository.  
-2. Move to `Settings` > `Actions` > `General` and enable `Allow GitHub Actions to create and approve pull requests`.
-
-## Development
-
-Install dependencies with `bun install`.
-
-```console
-$ bun install
+```yaml
+uses: koki-develop/cache-delete-action@v1
+with:
+  key: '<cache-key>'
 ```
 
-Edit [`action.yml`](./action.yml) to set up the action.  
-Edit [`src/main.ts`](./src/main.ts) to implement the action.
+### Inputs
 
-## Test
-
-Run `bun run test` to test the action. The testing framework is [Vitest](https://vitest.dev/).
-
-```console
-$ bun run test
-```
-
-## Release
-
-First, run `bun run build` to build the source code. The built code will be output to the `dist/` directory. Commit the content of this directory.
-
-```console
-$ bun run build
-$ git add dist
-$ git commit -m "Build"
-```
-
-Finally, create a tag in semver format.
-
-> [!NOTE]
-> The major version tag (e.g. `v1`) will be created automatically by GitHub Actions.  
-> See: [`.github/workflows/major-version-sync.yml`](./.github/workflows/major-version-sync.yml)
-
-```console
-$ git tag v1.0.0
-$ git push origin v1.0.0
-```
-
-Create a release on GitHub as needed.
+| Name | Default | Required | Description |
+| ---- | -------- | -------- | ----------- |
+| `key` | | **Yes** | A key for identifying the cache. |
+| `ref` | | No | By default, all caches that match the provided key are deleted, but you can optionally provide a Git ref to restrict deletions to caches that match both the provided key and the Git ref. |
+| `token` | `${{ github.token }}` | No | The token to use to delete the cache. |
+| `fail-on-not-found` | `false` | No | Whether to fail the action if the cache is not found. |
 
 ## LICENSE
 
