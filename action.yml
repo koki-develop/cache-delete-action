@@ -1,20 +1,29 @@
-name: Hello World
-description: Greet someone and record the time
+name: Cache Delete Action
+description: Delete a cache for a given key.
 
 branding:
-  icon: send
-  color: white
+  icon: trash
+  color: gray-dark
 
 inputs:
-  message:
-    description: |-
-      The message to echo.
+  key:
+    description: A key for identifying the cache.
+    required: true
+  ref:
+    description: |
+      The full Git reference for narrowing down the cache.
+      The `ref` for a branch should be formatted as `refs/heads/<branch name>`.s
+      To reference a pull request use `refs/pull/<number>/merge`.
     required: false
-    default: "Hello, world!"
-
-outputs:
-  message:
-    description: The message that was echoed.
+  token:
+    description: The token to use to delete the cache.
+    required: false
+    default: ${{ github.token }}
+  fail-on-not-found:
+    description: |
+      Whether to fail the action if the cache is not found.
+    required: false
+    default: 'false'
 
 runs:
   using: node20
