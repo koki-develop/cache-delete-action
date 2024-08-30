@@ -1,5 +1,5 @@
 name: Cache Delete Action
-description: Delete a cache for a given key.
+description: Delete GitHub Actions caches for a given key.
 
 branding:
   icon: trash

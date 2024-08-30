@@ -4,7 +4,7 @@
 [![CI](https://img.shields.io/github/actions/workflow/status/koki-develop/cache-delete-action/ci.yml?branch=main&logo=github&style=flat&label=ci)](https://github.com/koki-develop/cache-delete-action/actions/workflows/ci.yml)
 [![Build](https://img.shields.io/github/actions/workflow/status/koki-develop/cache-delete-action/build.yml?branch=main&logo=github&style=flat&label=build)](https://github.com/koki-develop/cache-delete-action/actions/workflows/build.yml)
 
-Delete a cache for a given key.
+Delete GitHub Actions caches for a given key.
 
 ## Usage
 
