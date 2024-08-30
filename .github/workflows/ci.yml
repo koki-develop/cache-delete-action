@@ -18,13 +18,51 @@ jobs:
       - uses: ./.github/actions/setup
       - run: bun run lint
 
-  # NOTE: If you want to run the action to test the changes, you can uncomment the following job
-  # run-action:
-  #   needs:
-  #     - test
-  #     - lint
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - uses: ./.github/actions/setup
-  #     - uses: ./
+  delete-cache:
+    needs:
+      - test
+      - lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: touch cache.txt
+      - uses: actions/cache@v4
+        with:
+          key: CACHE_KEY
+          path: cache.txt
+
+      - uses: ./
+        with:
+          key: CACHE_KEY
+
+  delete-cache-not-found-no-error:
+    needs:
+      - test
+      - lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./
+        id: cache-delete
+        with:
+          key: CACHE_NOT_FOUND
+          fail-on-not-found: false
+
+  delete-cache-not-found-error:
+    needs:
+      - test
+      - lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./
+        id: cache-delete
+        continue-on-error: true
+        with:
+          key: CACHE_NOT_FOUND
+          fail-on-not-found: true
+      - run: exit 1
+        if: steps.cache-delete.outcome != 'failure'
